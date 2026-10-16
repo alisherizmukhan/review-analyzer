@@ -1,0 +1,21 @@
+{
+  "name": "amazon_electronics_products",
+  "origin": "Amazon Reviews 2023 (McAuley Lab), Electronics: up to 1,000 reviews (per-product bottom-k sample, seed 42) for each of the 50 most-reviewed products of the research sample, read from the uncompressed file on the official Hugging Face mirror by scripts/download_amazon.py --products-only. Reviews of the research sample (train/val/test) were excluded at collection time. Analytics corpus for the MCP tools only; never used for training, tuning or evaluation. Duplicates are removed at collection time by review key (user_id|parent_asin|asin|timestamp); text-based de-duplication is off because it works across the whole corpus, and two customers writing 'Works great' about two different products are distinct reviews.",
+  "is_synthetic": false,
+  "source_path": "data/raw/amazon_electronics_products/product_reviews.jsonl",
+  "source_format": "jsonl",
+  "columns": {
+    "text": ["title", "text"],
+    "product_id": "parent_asin",
+    "rating": "rating",
+    "review_id": "source_offset"
+  },
+  "label_source": "rating",
+  "text_join": ". ",
+  "drop_star_titles": true,
+  "min_text_chars": 3,
+  "deduplicate": false,
+  "product_names_path": "data/raw/amazon_electronics_products/product_metadata.json",
+  "output_dir": "data/processed/amazon_electronics_products",
+  "split": {"strategy": "none"}
+}

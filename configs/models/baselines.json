@@ -1,0 +1,76 @@
+{
+  "seed": 42,
+  "feature_grid": [
+    {
+      "id": "word_1-2",
+      "word": {
+        "ngram_range": [
+          1,
+          2
+        ],
+        "min_df": 2,
+        "max_df": 0.95,
+        "max_features": 200000
+      }
+    },
+    {
+      "id": "word_1-2+char_3-5",
+      "word": {
+        "ngram_range": [
+          1,
+          2
+        ],
+        "min_df": 2,
+        "max_df": 0.95,
+        "max_features": 200000
+      },
+      "char": {
+        "ngram_range": [
+          3,
+          5
+        ],
+        "min_df": 3,
+        "max_features": 300000
+      }
+    }
+  ],
+  "families": {
+    "tfidf_logreg": {
+      "model_type": "logreg",
+      "classifier_grid": {
+        "C": [
+          0.25,
+          0.5,
+          1.0,
+          4.0
+        ],
+        "class_weight": [
+          "balanced",
+          null
+        ],
+        "max_iter": [
+          3000
+        ]
+      }
+    },
+    "tfidf_linearsvm": {
+      "model_type": "linear_svm",
+      "classifier_grid": {
+        "C": [
+          0.01,
+          0.02,
+          0.05,
+          0.2
+        ],
+        "class_weight": [
+          "balanced",
+          null
+        ],
+        "max_iter": [
+          5000
+        ]
+      }
+    }
+  },
+  "_grid_history": "v1 grid (LR C 1/4/16, SVM C 0.05/0.2/0.5) put the best C at the lower edge for both families on validation; grid extended downward. Decided on VALIDATION macro-F1 only."
+}

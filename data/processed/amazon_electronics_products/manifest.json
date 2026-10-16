@@ -1,0 +1,122 @@
+{
+  "name": "amazon_electronics_products",
+  "is_synthetic": false,
+  "created_utc": "2026-10-15T18:39:22+00:00",
+  "source": {
+    "path": "data/raw/amazon_electronics_products/product_reviews.jsonl",
+    "format": "jsonl",
+    "sha256": "304ede80227c37940bde9024022f5c813bfc39cbc017596635e2734876782e66",
+    "origin": "Amazon Reviews 2023 (McAuley Lab), Electronics: up to 1,000 reviews (per-product bottom-k sample, seed 42) for each of the 50 most-reviewed products of the research sample, read from the uncompressed file on the official Hugging Face mirror by scripts/download_amazon.py --products-only. Reviews of the research sample (train/val/test) were excluded at collection time. Analytics corpus for the MCP tools only; never used for training, tuning or evaluation. Duplicates are removed at collection time by review key (user_id|parent_asin|asin|timestamp); text-based de-duplication is off because it works across the whole corpus, and two customers writing 'Works great' about two different products are distinct reviews."
+  },
+  "config": {
+    "name": "amazon_electronics_products",
+    "source_path": "data/raw/amazon_electronics_products/product_reviews.jsonl",
+    "columns": {
+      "text": [
+        "title",
+        "text"
+      ],
+      "product_id": "parent_asin",
+      "rating": "rating",
+      "label": null,
+      "review_id": "source_offset",
+      "group": null
+    },
+    "source_format": "jsonl",
+    "origin": "Amazon Reviews 2023 (McAuley Lab), Electronics: up to 1,000 reviews (per-product bottom-k sample, seed 42) for each of the 50 most-reviewed products of the research sample, read from the uncompressed file on the official Hugging Face mirror by scripts/download_amazon.py --products-only. Reviews of the research sample (train/val/test) were excluded at collection time. Analytics corpus for the MCP tools only; never used for training, tuning or evaluation. Duplicates are removed at collection time by review key (user_id|parent_asin|asin|timestamp); text-based de-duplication is off because it works across the whole corpus, and two customers writing 'Works great' about two different products are distinct reviews.",
+    "is_synthetic": false,
+    "label_source": "rating",
+    "text_join": ". ",
+    "drop_star_titles": true,
+    "min_text_chars": 3,
+    "deduplicate": false,
+    "product_names_path": "data/raw/amazon_electronics_products/product_metadata.json",
+    "output_dir": "data/processed/amazon_electronics_products",
+    "split": {
+      "strategy": "none",
+      "val_size": 0.1,
+      "test_size": 0.1,
+      "seed": 42
+    }
+  },
+  "label_mapping": {
+    "negative": [
+      1,
+      2
+    ],
+    "neutral": [
+      3
+    ],
+    "positive": [
+      4,
+      5
+    ]
+  },
+  "counts": {
+    "input_rows": 50000,
+    "missing_values_in_mapped_columns": {
+      "title": 0,
+      "rating": 0,
+      "text": 27,
+      "parent_asin": 0,
+      "source_offset": 0
+    },
+    "excluded": {
+      "empty_or_too_short_text": 42
+    },
+    "rows_after_cleaning": 49958
+  },
+  "split_sizes": {
+    "corpus": 49958
+  },
+  "class_distribution": {
+    "all": {
+      "negative": {
+        "count": 6533,
+        "percent": 13.08
+      },
+      "neutral": {
+        "count": 3187,
+        "percent": 6.38
+      },
+      "positive": {
+        "count": 40238,
+        "percent": 80.54
+      }
+    },
+    "corpus": {
+      "negative": {
+        "count": 6533,
+        "percent": 13.08
+      },
+      "neutral": {
+        "count": 3187,
+        "percent": 6.38
+      },
+      "positive": {
+        "count": 40238,
+        "percent": 80.54
+      }
+    }
+  },
+  "leakage_checks": {},
+  "output_dir": "data/processed/amazon_electronics_products",
+  "environment": {
+    "packages": {
+      "python": "3.12.10",
+      "numpy": "2.5.4",
+      "scikit-learn": "1.9.1",
+      "scipy": "1.18.1",
+      "joblib": "1.6.0",
+      "torch": "2.11.0+cu128",
+      "transformers": "5.19.0",
+      "tokenizers": "0.23.3",
+      "sentence-transformers": "6.1.0",
+      "mcp": "2.3.0"
+    },
+    "platform": "Windows-11-10.0.26200-SP0",
+    "processor": "Intel64 Family 6 Model 183 Stepping 1, GenuineIntel",
+    "cuda_available": true,
+    "gpu": "NVIDIA GeForce RTX 5060"
+  }
+}

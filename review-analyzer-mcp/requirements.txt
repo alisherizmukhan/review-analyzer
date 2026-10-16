@@ -1,0 +1,6 @@
+# The MCP server imports the review_intel package from the project root.
+# Preferred (from the project root):   pip install -e ".[mcp,dev]"
+# Equivalent (from this folder):       pip install -r requirements.txt
+# mcp 2.x: FastMCP is named MCPServer (mcp.server.mcpserver).
+-e ..[mcp]
+pytest>=8

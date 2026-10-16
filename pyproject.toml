@@ -1,0 +1,39 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "review-intel"
+version = "0.2.0"
+description = "Intelligent user review analysis: dataset pipeline, sentiment models, aspect analytics and retrieval."
+requires-python = ">=3.11"
+readme = "README.md"
+dependencies = [
+    "numpy>=1.26",
+    "scikit-learn>=1.4",
+    "joblib>=1.3",
+    "threadpoolctl>=3.1",  # already a scikit-learn dependency; used directly to cap BLAS threads for LSA
+]
+
+[project.optional-dependencies]
+# MCP integration layer (review-analyzer-mcp/). mcp 2.x: FastMCP is named MCPServer.
+mcp = ["mcp[cli]>=2.3,<3"]
+# Optional fine-tuned transformer (Model C). Install torch first from the
+# PyTorch index that matches your hardware (see README).
+transformer = ["torch>=2.7", "transformers>=4.45"]
+# Optional dense semantic search.
+semantic = ["sentence-transformers>=3.0"]
+data = ["pyarrow>=15", "huggingface_hub>=0.24"]
+dev = ["pytest>=8"]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+review_intel = ["py.typed"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests", "review-analyzer-mcp/tests"]
+markers = [
+    "transformer: needs torch + transformers installed (skipped otherwise; never downloads weights)",
+]

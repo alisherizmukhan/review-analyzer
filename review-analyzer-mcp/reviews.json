@@ -1,0 +1,32 @@
+[
+  {
+    "id": 1,
+    "product": "Nova X1",
+    "text": "The battery lasts two full days. I love this phone, excellent battery life!",
+    "sentiment": "positive"
+  },
+  {
+    "id": 2,
+    "product": "Nova X1",
+    "text": "The camera is terrible in low light and most photos come out blurry.",
+    "sentiment": "negative"
+  },
+  {
+    "id": 3,
+    "product": "Pulse Earbuds",
+    "text": "Fast delivery, the package arrived a day early in perfect condition.",
+    "sentiment": "positive"
+  },
+  {
+    "id": 4,
+    "product": "Nova X1",
+    "text": "The battery drains by lunchtime even with light use. Very disappointing.",
+    "sentiment": "negative"
+  },
+  {
+    "id": 5,
+    "product": "Pulse Earbuds",
+    "text": "The earbuds come in a white case with a USB-C cable and three sizes of ear tips.",
+    "sentiment": "neutral"
+  }
+]

@@ -1,0 +1,20 @@
+{
+  "name": "amazon_electronics_corpus",
+  "origin": "Amazon Reviews 2023 (McAuley Lab), Electronics: up to N reviews for each of the most-reviewed products (scripts/download_amazon.py pass 2). Used for product analytics via MCP, never for training; reviews that are in the research sample were excluded at download time.",
+  "is_synthetic": false,
+  "source_path": "data/raw/amazon_electronics/product_corpus.jsonl",
+  "source_format": "jsonl",
+  "columns": {
+    "text": ["title", "text"],
+    "product_id": "parent_asin",
+    "rating": "rating"
+  },
+  "label_source": "rating",
+  "text_join": ". ",
+  "drop_star_titles": true,
+  "min_text_chars": 3,
+  "deduplicate": true,
+  "product_names_path": "data/raw/amazon_electronics/product_metadata.json",
+  "output_dir": "data/processed/amazon_electronics_corpus",
+  "split": {"strategy": "none"}
+}

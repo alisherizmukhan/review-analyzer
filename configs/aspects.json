@@ -1,0 +1,18 @@
+{
+  "_comment": "Aspect lexicon for dictionary-based aspect extraction. Terms are matched case-insensitively on word boundaries; multi-word terms are allowed. Edit freely; this is configuration, not a trained model.",
+  "version": "electronics-v1",
+  "aspects": {
+    "battery": ["battery", "batteries", "battery life", "charge", "charges", "charging", "charger", "recharge", "rechargeable"],
+    "camera": ["camera", "cameras", "lens", "photo", "photos", "selfie", "selfies"],
+    "screen": ["screen", "screens", "display", "displays", "resolution", "brightness", "touchscreen", "picture quality"],
+    "performance": ["performance", "speed", "processor", "cpu", "lag", "lags", "lagging", "laggy", "freezes", "freezing", "crashes", "responsiveness", "buffering"],
+    "price": ["price", "prices", "priced", "pricing", "cost", "costs", "value", "money", "expensive", "affordable", "worth"],
+    "design": ["design", "designed", "build quality", "sturdy", "flimsy", "sleek", "finish", "appearance", "color", "colour"],
+    "delivery": ["delivery", "delivered", "shipping", "shipped", "arrived", "package", "packaging"],
+    "sound": ["sound", "sounds", "audio", "bass", "volume", "speaker", "speakers", "microphone", "mic"],
+    "connectivity": ["bluetooth", "wifi", "wi-fi", "connection", "connectivity", "pairing", "paired", "signal", "disconnects", "range"],
+    "setup": ["setup", "set up", "install", "installation", "instructions", "app"],
+    "remote": ["remote", "remotes", "voice remote"],
+    "customer_service": ["customer service", "support", "warranty", "refund", "replacement"]
+  }
+}

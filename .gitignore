@@ -1,0 +1,62 @@
+# Environments
+.venv/
+venv/
+env/
+review-analyzer-mcp/.venv/
+
+# Secrets and local configuration (the project reads REVIEW_ANALYZER_* from the process environment)
+.env
+.env.*
+*.pem
+*.key
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+build/
+dist/
+
+# Data: raw downloads and processed splits are reproducible, large, and the Amazon Reviews 2023
+# terms do not clearly allow redistribution. Only small manifests and aggregate reports are committed.
+data/raw/
+data/processed/**
+!data/processed/*/
+!data/processed/*/manifest.json
+!data/processed/amazon_electronics/analytics_corpus.json
+!data/processed/amazon_electronics_products/validation_report.json
+# The synthetic fixture is committed (tests need it).
+!data/fixtures/
+
+# Trained models (~285 MB; regenerate with the scripts, see README "Reproducing the results")
+artifacts/
+*.safetensors
+*.joblib
+*.pt
+*.bin
+
+# Logs and temporary output
+*.log
+*.tmp
+tmp/
+
+# Tools, editors and OS files
+.mcp-inspector/
+.ipynb_checkpoints/
+.claude/
+CLAUDE.local.md
+.vscode/
+.idea/
+*.swp
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Local-only notes (not part of the published project)
+EXPLANATION.md
+docs/CHANGELOG.md

@@ -1,0 +1,20 @@
+{
+  "name": "amazon_electronics",
+  "origin": "Amazon Reviews 2023 (McAuley Lab), category Electronics; uniform reservoir sample produced by scripts/download_amazon.py (see data/raw/amazon_electronics/download_manifest.json).",
+  "is_synthetic": false,
+  "source_path": "data/raw/amazon_electronics/reviews_sample.jsonl",
+  "source_format": "jsonl",
+  "columns": {
+    "text": ["title", "text"],
+    "product_id": "parent_asin",
+    "rating": "rating",
+    "group": "user_id"
+  },
+  "label_source": "rating",
+  "text_join": ". ",
+  "drop_star_titles": true,
+  "min_text_chars": 3,
+  "deduplicate": true,
+  "output_dir": "data/processed/amazon_electronics",
+  "split": {"strategy": "stratified", "val_size": 0.1, "test_size": 0.1, "seed": 42}
+}

@@ -1,0 +1,9 @@
+{
+  "source_split": "data/processed/amazon_electronics/test.csv",
+  "source_sha256": "b995a8f177912a36cdbcb69c7cdb40f43c75aa3fdaef8debc291c0baaf23a8c5",
+  "product_names": "data/raw/amazon_electronics/product_metadata.json",
+  "rows": 9659,
+  "products_with_names": 25,
+  "created_utc": "2026-10-14T16:06:16+00:00",
+  "note": "Analytics corpus for MCP tools. Built from a held-out split; not used for training/selection."
+}

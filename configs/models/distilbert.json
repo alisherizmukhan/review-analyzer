@@ -1,0 +1,16 @@
+{
+  "base_model": "distilbert/distilbert-base-uncased",
+  "max_length": 256,
+  "batch_size": 32,
+  "eval_batch_size": 128,
+  "epochs": 2,
+  "learning_rate": 5e-5,
+  "weight_decay": 0.01,
+  "warmup_ratio": 0.06,
+  "class_weight": "balanced",
+  "max_train_samples": null,
+  "device": "auto",
+  "precision": "auto",
+  "seed": 42,
+  "name": "distilbert"
+}

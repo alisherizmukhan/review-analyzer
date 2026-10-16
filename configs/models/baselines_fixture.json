@@ -1,0 +1,10 @@
+{
+  "seed": 42,
+  "feature_grid": [
+    {"id": "word_1-2", "word": {"ngram_range": [1, 2], "min_df": 1}}
+  ],
+  "families": {
+    "tfidf_logreg": {"model_type": "logreg", "classifier_grid": {"C": [1.0, 10.0], "class_weight": ["balanced"]}},
+    "tfidf_linearsvm": {"model_type": "linear_svm", "classifier_grid": {"C": [0.5], "class_weight": ["balanced"]}}
+  }
+}

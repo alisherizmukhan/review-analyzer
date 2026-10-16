@@ -1,0 +1,327 @@
+{
+  "family": "tfidf_logreg",
+  "model_dir": "artifacts/models/amazon_electronics/tfidf_logreg",
+  "model_version": "tfidf_logreg@amazon_electronics-20261014-c6f67c75",
+  "algorithm": "TF-IDF + LogisticRegression",
+  "score_type": "probability",
+  "dataset": {
+    "name": "amazon_electronics",
+    "is_synthetic": false,
+    "processed_dir": "data/processed/amazon_electronics",
+    "source_sha256": "6f4a0a50e67b31baed23b321218d6b403cbbc5b7cbdbe326a57a406166c0fc55",
+    "split_sizes": {
+      "train": 77268,
+      "val": 9659,
+      "test": 9659
+    }
+  },
+  "selection_within_family": "highest validation macro-F1 over the grid below",
+  "best_params": {
+    "features": {
+      "id": "word_1-2+char_3-5",
+      "word": {
+        "ngram_range": [
+          1,
+          2
+        ],
+        "min_df": 2,
+        "max_df": 0.95,
+        "max_features": 200000
+      },
+      "char": {
+        "ngram_range": [
+          3,
+          5
+        ],
+        "min_df": 3,
+        "max_features": 300000
+      }
+    },
+    "classifier": {
+      "model_type": "logreg",
+      "C": 0.5,
+      "class_weight": "balanced",
+      "max_iter": 3000
+    }
+  },
+  "training_time_seconds": 52.37,
+  "validation": {
+    "n": 9659,
+    "accuracy": 0.8521,
+    "macro_precision": 0.6741,
+    "macro_recall": 0.7399,
+    "macro_f1": 0.6966,
+    "per_class": {
+      "negative": {
+        "precision": 0.749,
+        "recall": 0.8206,
+        "f1": 0.7832,
+        "support": 1745
+      },
+      "neutral": {
+        "precision": 0.2974,
+        "recall": 0.5084,
+        "f1": 0.3753,
+        "support": 657
+      },
+      "positive": {
+        "precision": 0.9758,
+        "recall": 0.8907,
+        "f1": 0.9313,
+        "support": 7257
+      }
+    },
+    "confusion_matrix": {
+      "labels": [
+        "negative",
+        "neutral",
+        "positive"
+      ],
+      "rows_are": "true label",
+      "columns_are": "predicted label",
+      "matrix": [
+        [
+          1432,
+          264,
+          49
+        ],
+        [
+          212,
+          334,
+          111
+        ],
+        [
+          268,
+          525,
+          6464
+        ]
+      ]
+    },
+    "calibration": {
+      "ece": 0.0425,
+      "bins": 15,
+      "mean_confidence": 0.8103,
+      "accuracy": 0.8521
+    }
+  },
+  "latency": {
+    "single_text_median_ms": 1.113,
+    "single_text_p95_ms": 1.954,
+    "batch_throughput_texts_per_s": 4250.8,
+    "n_texts": 300,
+    "method": "Single-text latency: 300 texts drawn with a fixed seed from the evaluation split are predicted one at a time (batch size 1) after 20 warm-up calls; we report the median and 95th percentile wall-clock time per call (time.perf_counter), including vectorization/tokenization. Batch throughput: the same texts are predicted in batches of 256; we report texts per second. Measured in-process on the machine listed under 'environment'; no network or disk I/O is included."
+  },
+  "grid": [
+    {
+      "features": "word_1-2",
+      "classifier_params": {
+        "C": 0.25,
+        "class_weight": "balanced",
+        "max_iter": 3000
+      },
+      "val_macro_f1": 0.6859,
+      "val_accuracy": 0.8342,
+      "fit_seconds_features": 5.33,
+      "fit_seconds_classifier": 4.05
+    },
+    {
+      "features": "word_1-2",
+      "classifier_params": {
+        "C": 0.25,
+        "class_weight": null,
+        "max_iter": 3000
+      },
+      "val_macro_f1": 0.5899,
+      "val_accuracy": 0.8762,
+      "fit_seconds_features": 5.33,
+      "fit_seconds_classifier": 3.59
+    },
+    {
+      "features": "word_1-2",
+      "classifier_params": {
+        "C": 0.5,
+        "class_weight": "balanced",
+        "max_iter": 3000
+      },
+      "val_macro_f1": 0.6898,
+      "val_accuracy": 0.8452,
+      "fit_seconds_features": 5.33,
+      "fit_seconds_classifier": 7.32
+    },
+    {
+      "features": "word_1-2",
+      "classifier_params": {
+        "C": 0.5,
+        "class_weight": null,
+        "max_iter": 3000
+      },
+      "val_macro_f1": 0.6126,
+      "val_accuracy": 0.8831,
+      "fit_seconds_features": 5.33,
+      "fit_seconds_classifier": 5.41
+    },
+    {
+      "features": "word_1-2",
+      "classifier_params": {
+        "C": 1.0,
+        "class_weight": "balanced",
+        "max_iter": 3000
+      },
+      "val_macro_f1": 0.6914,
+      "val_accuracy": 0.8554,
+      "fit_seconds_features": 5.33,
+      "fit_seconds_classifier": 7.23
+    },
+    {
+      "features": "word_1-2",
+      "classifier_params": {
+        "C": 1.0,
+        "class_weight": null,
+        "max_iter": 3000
+      },
+      "val_macro_f1": 0.6325,
+      "val_accuracy": 0.8876,
+      "fit_seconds_features": 5.33,
+      "fit_seconds_classifier": 6.59
+    },
+    {
+      "features": "word_1-2",
+      "classifier_params": {
+        "C": 4.0,
+        "class_weight": "balanced",
+        "max_iter": 3000
+      },
+      "val_macro_f1": 0.6858,
+      "val_accuracy": 0.8683,
+      "fit_seconds_features": 5.33,
+      "fit_seconds_classifier": 11.3
+    },
+    {
+      "features": "word_1-2",
+      "classifier_params": {
+        "C": 4.0,
+        "class_weight": null,
+        "max_iter": 3000
+      },
+      "val_macro_f1": 0.6554,
+      "val_accuracy": 0.8881,
+      "fit_seconds_features": 5.33,
+      "fit_seconds_classifier": 6.38
+    },
+    {
+      "features": "word_1-2+char_3-5",
+      "classifier_params": {
+        "C": 0.25,
+        "class_weight": "balanced",
+        "max_iter": 3000
+      },
+      "val_macro_f1": 0.6913,
+      "val_accuracy": 0.8404,
+      "fit_seconds_features": 24.63,
+      "fit_seconds_classifier": 21.81
+    },
+    {
+      "features": "word_1-2+char_3-5",
+      "classifier_params": {
+        "C": 0.25,
+        "class_weight": null,
+        "max_iter": 3000
+      },
+      "val_macro_f1": 0.6199,
+      "val_accuracy": 0.8855,
+      "fit_seconds_features": 24.63,
+      "fit_seconds_classifier": 15.82
+    },
+    {
+      "features": "word_1-2+char_3-5",
+      "classifier_params": {
+        "C": 0.5,
+        "class_weight": "balanced",
+        "max_iter": 3000
+      },
+      "val_macro_f1": 0.6966,
+      "val_accuracy": 0.8521,
+      "fit_seconds_features": 24.63,
+      "fit_seconds_classifier": 27.74
+    },
+    {
+      "features": "word_1-2+char_3-5",
+      "classifier_params": {
+        "C": 0.5,
+        "class_weight": null,
+        "max_iter": 3000
+      },
+      "val_macro_f1": 0.64,
+      "val_accuracy": 0.8882,
+      "fit_seconds_features": 24.63,
+      "fit_seconds_classifier": 17.79
+    },
+    {
+      "features": "word_1-2+char_3-5",
+      "classifier_params": {
+        "C": 1.0,
+        "class_weight": "balanced",
+        "max_iter": 3000
+      },
+      "val_macro_f1": 0.6916,
+      "val_accuracy": 0.8576,
+      "fit_seconds_features": 24.63,
+      "fit_seconds_classifier": 23.81
+    },
+    {
+      "features": "word_1-2+char_3-5",
+      "classifier_params": {
+        "C": 1.0,
+        "class_weight": null,
+        "max_iter": 3000
+      },
+      "val_macro_f1": 0.6548,
+      "val_accuracy": 0.8902,
+      "fit_seconds_features": 24.63,
+      "fit_seconds_classifier": 21.13
+    },
+    {
+      "features": "word_1-2+char_3-5",
+      "classifier_params": {
+        "C": 4.0,
+        "class_weight": "balanced",
+        "max_iter": 3000
+      },
+      "val_macro_f1": 0.6834,
+      "val_accuracy": 0.8659,
+      "fit_seconds_features": 24.63,
+      "fit_seconds_classifier": 22.34
+    },
+    {
+      "features": "word_1-2+char_3-5",
+      "classifier_params": {
+        "C": 4.0,
+        "class_weight": null,
+        "max_iter": 3000
+      },
+      "val_macro_f1": 0.6666,
+      "val_accuracy": 0.889,
+      "fit_seconds_features": 24.63,
+      "fit_seconds_classifier": 38.04
+    }
+  ],
+  "created_utc": "2026-10-14T15:35:25+00:00",
+  "environment": {
+    "packages": {
+      "python": "3.12.10",
+      "numpy": "2.5.4",
+      "scikit-learn": "1.9.1",
+      "scipy": "1.18.1",
+      "joblib": "1.6.0",
+      "torch": "2.11.0+cu128",
+      "transformers": "5.19.0",
+      "tokenizers": "0.23.3",
+      "sentence-transformers": "6.1.0",
+      "mcp": "2.3.0"
+    },
+    "platform": "Windows-11-10.0.26200-SP0",
+    "processor": "Intel64 Family 6 Model 183 Stepping 1, GenuineIntel",
+    "cuda_available": true,
+    "gpu": "NVIDIA GeForce RTX 5060"
+  }
+}

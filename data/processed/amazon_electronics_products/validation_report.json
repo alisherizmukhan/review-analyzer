@@ -1,0 +1,316 @@
+{
+  "created_utc": "2026-10-15T18:39:29+00:00",
+  "raw": {
+    "file": "data/raw/amazon_electronics_products/product_reviews.jsonl",
+    "rows": 50000,
+    "selected_products": 50,
+    "products_with_reviews": 50,
+    "products_not_found": [],
+    "rows_outside_selected_products": 0,
+    "duplicate_review_keys_remaining": 0,
+    "duplicate_keys_dropped_during_collection": 20392,
+    "excluded_research_sample_reviews": 4974,
+    "rows_whose_key_names_another_product": 0,
+    "missing_rate": {
+      "rating": 0.0,
+      "title": 0.0,
+      "text": 6e-05,
+      "parent_asin": 0.0,
+      "user_id": 0.0,
+      "timestamp": 0.0
+    },
+    "distribution": {
+      "products": 50,
+      "min": 1000,
+      "median": 1000,
+      "max": 1000,
+      "products_with_at_least_30": 50,
+      "products_with_at_least_50": 50,
+      "products_with_at_least_100": 50,
+      "products_with_at_least_500": 50,
+      "products_with_at_least_1000": 50
+    },
+    "review_keys_shared_with_research_sample": 0
+  },
+  "corpus": {
+    "file": "data/processed/amazon_electronics_products/corpus.csv",
+    "rows": 49958,
+    "rows_without_matching_raw_row_or_product": 0,
+    "products_with_name": 50,
+    "label_distribution": {
+      "positive": 40238,
+      "negative": 6533,
+      "neutral": 3187
+    },
+    "distribution": {
+      "products": 50,
+      "min": 996,
+      "median": 1000,
+      "max": 1000,
+      "products_with_at_least_30": 50,
+      "products_with_at_least_50": 50,
+      "products_with_at_least_100": 50,
+      "products_with_at_least_500": 50,
+      "products_with_at_least_1000": 31
+    },
+    "per_product": [
+      {
+        "product": "B000WYVBR0",
+        "product_name": "VideoSecu ML531BE2 TV Wall Mount kit with Free Magnetic Stud Finder and HDMI Cable for Most 26-55 TV and New LED UHD TV up to 60 inch 400x400 Full Motion with 20 inch Articulating Arm WT8",
+        "reviews": 1000
+      },
+      {
+        "product": "B00N2ZDXW2",
+        "product_name": "Ring Video Doorbell (1st Gen) – 720p HD video, motion activated alerts, easy installation – Satin Nickel",
+        "reviews": 1000
+      },
+      {
+        "product": "B01MTF2Z37",
+        "product_name": "Fire HD 10 Tablet with Alexa Hands-Free, 10.1\" 1080p Full HD Display, 32 GB, Marine Blue (Previous Generation - 7th)",
+        "reviews": 1000
+      },
+      {
+        "product": "B07456BG8N",
+        "product_name": "Echo (2nd Generation) - Smart speaker with Alexa and Dolby processing - Charcoal Fabric",
+        "reviews": 1000
+      },
+      {
+        "product": "B075JZNHTD",
+        "product_name": "Fire TV with 4K Ultra HD and 1st Gen Alexa Voice Remote, streaming media player",
+        "reviews": 1000
+      },
+      {
+        "product": "B0791TX5P5",
+        "product_name": "Fire TV Stick streaming device with Alexa built in, includes Alexa Voice Remote, HD, latest release",
+        "reviews": 1000
+      },
+      {
+        "product": "B07F4P3JH7",
+        "product_name": "Fire HD 8 Tablet (8\" HD Display, 16 GB) - Black (Previous Generation - 8th)",
+        "reviews": 1000
+      },
+      {
+        "product": "B07GZFM1ZM",
+        "product_name": "Fire TV Stick 4K streaming device with Alexa Voice Remote (includes TV controls) | Dolby Vision",
+        "reviews": 1000
+      },
+      {
+        "product": "B07H65KP63",
+        "product_name": "Echo Dot (3rd Gen, 2018 release) - Smart speaker with Alexa - Charcoal",
+        "reviews": 1000
+      },
+      {
+        "product": "B07HZLHPKP",
+        "product_name": "Echo Show 5 (1st Gen, 2019 release) -- Smart display with Alexa – stay connected with video calling - Charcoal",
+        "reviews": 1000
+      },
+      {
+        "product": "B07J2FGZSM",
+        "product_name": "Kindle Paperwhite – (previous generation - 2018 release) Waterproof with 2x the Storage – Ad-Supported",
+        "reviews": 1000
+      },
+      {
+        "product": "B07KTYJ769",
+        "product_name": "Amazon Smart Plug, for home automation, Works with Alexa - A Certified for Humans Device",
+        "reviews": 1000
+      },
+      {
+        "product": "B07N8VFFNS",
+        "product_name": "Fire 7 tablet, 7\" display, 16 GB, (2019 release), Black",
+        "reviews": 1000
+      },
+      {
+        "product": "B07PDHSLM6",
+        "product_name": "Echo Dot (3rd Gen) - Smart speaker with Alexa - Heather Gray",
+        "reviews": 1000
+      },
+      {
+        "product": "B07PHQ93TV",
+        "product_name": "Fire HD 10 Tablet (10.1\" 1080p full HD display, 64 GB) – Black (2019 Release)",
+        "reviews": 1000
+      },
+      {
+        "product": "B07PXGQC1Q",
+        "product_name": "Apple AirPods (2nd Generation) Wireless Earbuds with Lightning Charging Case Included. Over 24 Hours of Battery Life, Effortless Setup. Bluetooth Headphones for iPhone",
+        "reviews": 1000
+      },
+      {
+        "product": "B07TMJ8S5Z",
+        "product_name": "Amazon Fire HD 8 tablet, 8\" HD display, 64 GB, (2020 release), designed for portable entertainment, Black",
+        "reviews": 1000
+      },
+      {
+        "product": "B07VTK654B",
+        "product_name": "Echo Auto (1st gen) - Hands-free Alexa in your car with your phone",
+        "reviews": 1000
+      },
+      {
+        "product": "B07VXXBTX4",
+        "product_name": "Echo Show 8 (1st Gen, 2019 release) -- HD smart display with Alexa – stay connected with video calling - Sandstone",
+        "reviews": 1000
+      },
+      {
+        "product": "B08F1P3BCC",
+        "product_name": "Echo Dot (4th Gen) | Smart speaker with Alexa | Twilight Blue",
+        "reviews": 1000
+      },
+      {
+        "product": "B08F6GPRH6",
+        "product_name": "Blink Whole Home Bundle | Video Doorbell System, Outdoor camera, and Mini camera | HD video, motion detection, Works with Alexa",
+        "reviews": 1000
+      },
+      {
+        "product": "B08F9ZCTCL",
+        "product_name": "Fire TV Stick Lite, free and live TV, Alexa Voice Remote Lite, smart home controls, HD streaming",
+        "reviews": 1000
+      },
+      {
+        "product": "B08WJSHSLC",
+        "product_name": "Fire TV Stick (3rd Gen) with Alexa Voice Remote (includes TV controls) + Star Wars The Mandalorian remote cover (Grogu Green)",
+        "reviews": 1000
+      },
+      {
+        "product": "B08XNCHTCY",
+        "product_name": "TOZO T6 True Wireless Earbuds Bluetooth 5.3 Headphones Touch Control with Wireless Charging Case IPX8 Waterproof Stereo Earphones in-Ear Built-in Mic Headset Premium Deep Bass White (2022 Upgraded)",
+        "reviews": 1000
+      },
+      {
+        "product": "B08XPWDSWW",
+        "product_name": "TOZO T10 Bluetooth 5.3 Wireless Earbuds with Wireless Charging Case IPX8 Waterproof Stereo Headphones in Ear Built in Mic Headset Premium Sound with Deep Bass for Sport White (2022 Upgraded)",
+        "reviews": 1000
+      },
+      {
+        "product": "B08YF1VBYD",
+        "product_name": "DOSS Bluetooth Speaker, SoundBox Touch Portable Wireless Speaker with 12W HD Sound and Bass, IPX5 Water-Resistant, 20H Playtime, Touch Control, Handsfree, Speaker for Home, Outdoor, Travel-Black",
+        "reviews": 1000
+      },
+      {
+        "product": "B08YFJYD5Z",
+        "product_name": "All-new Fire HD 10 tablet, 10.1\", 1080p Full HD, 32 GB, latest model (2021 release), Black, without lockscreen ads",
+        "reviews": 1000
+      },
+      {
+        "product": "B092HSPZJ3",
+        "product_name": "Nulaxy Bluetooth Car FM Transmitter Audio Adapter Receiver Wireless Handsfree Voltmeter Car Kit TF Card AUX 1.44 Display – KM18 Peacock Blue",
+        "reviews": 1000
+      },
+      {
+        "product": "B0935ZDCYD",
+        "product_name": "Anker Soundcore Bluetooth Speaker with 24-Hour Playtime, 66-Feet Bluetooth Range & Built-in Mic, Dual-Driver Portable Wireless Speaker with Low Harmonic Distortion and Superior Sound - Blue",
+        "reviews": 1000
+      },
+      {
+        "product": "B0BGS23YKX",
+        "product_name": "JSAUX USB-C to USB A Cable 3.1A Fast Charging [2-Pack 6.6ft], USB Type C Charger Cord Compatible with Samsung Galaxy S10 S9 S8 S20 Plus A51 A12 A11, Note 10 9 8, PS5 Controller USB C Charger-Green",
+        "reviews": 1000
+      },
+      {
+        "product": "B0C3NMZ2C7",
+        "product_name": "Fire TV Stick 4K, brilliant 4K streaming quality, TV and smart home controls, free and live TV",
+        "reviews": 1000
+      },
+      {
+        "product": "B00OQVZDJM",
+        "product_name": "Kindle Paperwhite E-reader (Previous generation – 2015 release) - Black, 6\" High-Resolution Display (300 ppi) with Built-in Light, Wi-Fi, Ad-Supported",
+        "reviews": 999
+      },
+      {
+        "product": "B01G8JO5F2",
+        "product_name": "Senso Bluetooth Headphones, Best Wireless Sports Earbuds w/Mic IPX7 Waterproof HD Stereo Sweatproof Earphones for Gym Running Workout Noise Cancelling Earphones Earbuds Noise Cancelling Headsets",
+        "reviews": 999
+      },
+      {
+        "product": "B075X8471B",
+        "product_name": "Fire TV Stick with Alexa Voice Remote, streaming media player - Previous Generation",
+        "reviews": 999
+      },
+      {
+        "product": "B08RLW7918",
+        "product_name": "WYZE Cam v2 - White",
+        "reviews": 999
+      },
+      {
+        "product": "B0BW4PFM58",
+        "product_name": "OontZ Angle 3 Bluetooth Speaker, Portable Wireless Bluetooth 5.0 Speaker, 10 Watts, Crystal Clear Stereo Sound, Rich Bass, IPX5 Water Resistant, Loud Portable Bluetooth Speaker (Black)",
+        "reviews": 999
+      },
+      {
+        "product": "B0C1J4XGB1",
+        "product_name": "Soundbot SB510 Bluetooth Shower Speaker HD Water Resistant Bathroom Speakers, Handsfree Portable Speakerphone with Built-in Mic, 6hrs of Playtime, Control Buttons and Dedicated Suction Cup (Blue)",
+        "reviews": 999
+      },
+      {
+        "product": "B00CX5P8FC",
+        "product_name": "Amazon Fire TV - 1st Generation",
+        "reviews": 998
+      },
+      {
+        "product": "B00L0YLRUW",
+        "product_name": "NETGEAR Wi-Fi Range Extender EX2700 - Coverage Up to 800 Sq Ft and 10 devices with N300 Wireless Signal Booster & Repeater (Up to 300Mbps Speed), and Compact Wall Plug Design",
+        "reviews": 998
+      },
+      {
+        "product": "B00U3FPN4U",
+        "product_name": "Amazon Fire TV with 4K Ultra HD",
+        "reviews": 998
+      },
+      {
+        "product": "B00ZVJAF9G",
+        "product_name": "Fire TV Stick with Voice Remote",
+        "reviews": 998
+      },
+      {
+        "product": "B01BRWH8G8",
+        "product_name": "Fire HD 8 Tablet with Alexa, 8\" HD Display, 16 GB, Magenta - with Special Offers (Previous Generation - 6th)",
+        "reviews": 998
+      },
+      {
+        "product": "B01K8B8YA8",
+        "product_name": "Echo Dot (2nd Generation) - Smart speaker with Alexa - White",
+        "reviews": 998
+      },
+      {
+        "product": "B0051VVOB2",
+        "product_name": "Kindle Fire (Previous Generation - 1st)",
+        "reviews": 997
+      },
+      {
+        "product": "B07P374FF3",
+        "product_name": "Fire 7 Tablet (7\" display, 16 GB) - Yellow - (Previous Generation - 7th)",
+        "reviews": 997
+      },
+      {
+        "product": "B083TH1B45",
+        "product_name": "Cheetah Mounts APDAM3B Dual Articulating Arm TV Wall Mount Bracket for 20-65” TVs up to VESA 400 and 115lbs,Mounts on Studs up to 16”, Includes Twisted Veins 10’HDMI Cable and 6” 3-Axis Bubble Level",
+        "reviews": 997
+      },
+      {
+        "product": "B0BGNG1294",
+        "product_name": "Amazon Basics HDMI Cable, 18Gbps High-Speed, 4K@60Hz, 2160p, Ethernet Ready, 10 Foot, Black",
+        "reviews": 997
+      },
+      {
+        "product": "B010BWYDYA",
+        "product_name": "Fire Tablet with Alexa, 7\" Display, 16 GB, Blue - with Special Offers (Previous Generation - 5th)",
+        "reviews": 996
+      },
+      {
+        "product": "B011BRUOMO",
+        "product_name": "SanDisk Ultra 32GB microSDHC UHS-I Card with Adapter, Silver, Standard Packaging (SDSQUNC-032G-GN6MA)",
+        "reviews": 996
+      },
+      {
+        "product": "B07S764D9V",
+        "product_name": "Panasonic ErgoFit Wired Earbuds, In-Ear Headphones with Microphone and Call Controller, Ergonomic Custom-Fit Earpieces (S/M/L), 3.5mm Jack for Phones and Laptops - RP-TCM125-A (Blue)",
+        "reviews": 996
+      }
+    ],
+    "texts_identical_to_a_research_review": 1518
+  },
+  "source_verification": {
+    "checked": 200,
+    "seed": 42,
+    "mismatches": 0,
+    "examples": []
+  }
+}

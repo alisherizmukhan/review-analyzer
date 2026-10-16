@@ -1,0 +1,263 @@
+{
+  "dataset": "amazon_electronics",
+  "test_size": 9659,
+  "selection": {
+    "selected_family": "distilbert",
+    "model_version": "distilbert@amazon_electronics-20261014-79b5c36e",
+    "selection_rule": "Highest validation macro-F1; ties (equal to 4 decimals) broken by the fixed preference order ['tfidf_logreg', 'tfidf_linearsvm', 'distilbert'] (cheaper model first). The test split is not used for selection.",
+    "validation_macro_f1": 0.7444,
+    "ranking": [
+      {
+        "family": "distilbert",
+        "val_macro_f1": 0.7444,
+        "val_accuracy": 0.8905,
+        "median_latency_ms": 3.313
+      },
+      {
+        "family": "tfidf_logreg",
+        "val_macro_f1": 0.6966,
+        "val_accuracy": 0.8521,
+        "median_latency_ms": 1.113
+      },
+      {
+        "family": "tfidf_linearsvm",
+        "val_macro_f1": 0.692,
+        "val_accuracy": 0.8805,
+        "median_latency_ms": 1.085
+      }
+    ],
+    "dataset": "amazon_electronics",
+    "created_utc": "2026-10-14T15:46:07+00:00"
+  },
+  "results": {
+    "distilbert": {
+      "role": "selected",
+      "model_version": "distilbert@amazon_electronics-20261014-79b5c36e",
+      "score_type": "softmax_probability",
+      "test": {
+        "n": 9659,
+        "accuracy": 0.8927,
+        "macro_precision": 0.7322,
+        "macro_recall": 0.7874,
+        "macro_f1": 0.7522,
+        "per_class": {
+          "negative": {
+            "precision": 0.8422,
+            "recall": 0.8567,
+            "f1": 0.8493,
+            "support": 1744
+          },
+          "neutral": {
+            "precision": 0.3713,
+            "recall": 0.5753,
+            "f1": 0.4513,
+            "support": 657
+          },
+          "positive": {
+            "precision": 0.9831,
+            "recall": 0.9301,
+            "f1": 0.9559,
+            "support": 7258
+          }
+        },
+        "confusion_matrix": {
+          "labels": [
+            "negative",
+            "neutral",
+            "positive"
+          ],
+          "rows_are": "true label",
+          "columns_are": "predicted label",
+          "matrix": [
+            [
+              1494,
+              223,
+              27
+            ],
+            [
+              190,
+              378,
+              89
+            ],
+            [
+              90,
+              417,
+              6751
+            ]
+          ]
+        },
+        "calibration": {
+          "ece": 0.0324,
+          "bins": 15,
+          "mean_confidence": 0.925,
+          "accuracy": 0.8927
+        }
+      },
+      "latency_on_test_texts": {
+        "single_text_median_ms": 3.437,
+        "single_text_p95_ms": 5.533,
+        "batch_throughput_texts_per_s": 340.6,
+        "n_texts": 300,
+        "method": "Single-text latency: 300 texts drawn with a fixed seed from the evaluation split are predicted one at a time (batch size 1) after 20 warm-up calls; we report the median and 95th percentile wall-clock time per call (time.perf_counter), including vectorization/tokenization. Batch throughput: the same texts are predicted in batches of 256; we report texts per second. Measured in-process on the machine listed under 'environment'; no network or disk I/O is included."
+      },
+      "training_time_seconds": 572.4
+    },
+    "tfidf_logreg": {
+      "role": "post-selection comparison only",
+      "model_version": "tfidf_logreg@amazon_electronics-20261014-c6f67c75",
+      "score_type": "probability",
+      "test": {
+        "n": 9659,
+        "accuracy": 0.8521,
+        "macro_precision": 0.6796,
+        "macro_recall": 0.7462,
+        "macro_f1": 0.7009,
+        "per_class": {
+          "negative": {
+            "precision": 0.7684,
+            "recall": 0.8182,
+            "f1": 0.7926,
+            "support": 1744
+          },
+          "neutral": {
+            "precision": 0.296,
+            "recall": 0.5312,
+            "f1": 0.3802,
+            "support": 657
+          },
+          "positive": {
+            "precision": 0.9745,
+            "recall": 0.8892,
+            "f1": 0.9299,
+            "support": 7258
+          }
+        },
+        "confusion_matrix": {
+          "labels": [
+            "negative",
+            "neutral",
+            "positive"
+          ],
+          "rows_are": "true label",
+          "columns_are": "predicted label",
+          "matrix": [
+            [
+              1427,
+              261,
+              56
+            ],
+            [
+              195,
+              349,
+              113
+            ],
+            [
+              235,
+              569,
+              6454
+            ]
+          ]
+        },
+        "calibration": {
+          "ece": 0.0423,
+          "bins": 15,
+          "mean_confidence": 0.8097,
+          "accuracy": 0.8521
+        }
+      },
+      "latency_on_test_texts": {
+        "single_text_median_ms": 1.084,
+        "single_text_p95_ms": 2.085,
+        "batch_throughput_texts_per_s": 3940.9,
+        "n_texts": 300,
+        "method": "Single-text latency: 300 texts drawn with a fixed seed from the evaluation split are predicted one at a time (batch size 1) after 20 warm-up calls; we report the median and 95th percentile wall-clock time per call (time.perf_counter), including vectorization/tokenization. Batch throughput: the same texts are predicted in batches of 256; we report texts per second. Measured in-process on the machine listed under 'environment'; no network or disk I/O is included."
+      },
+      "training_time_seconds": 52.37
+    },
+    "tfidf_linearsvm": {
+      "role": "post-selection comparison only",
+      "model_version": "tfidf_linearsvm@amazon_electronics-20261014-9f6ee7d0",
+      "score_type": "decision_score",
+      "test": {
+        "n": 9659,
+        "accuracy": 0.8833,
+        "macro_precision": 0.6991,
+        "macro_recall": 0.7067,
+        "macro_f1": 0.7021,
+        "per_class": {
+          "negative": {
+            "precision": 0.78,
+            "recall": 0.8498,
+            "f1": 0.8134,
+            "support": 1744
+          },
+          "neutral": {
+            "precision": 0.3636,
+            "recall": 0.3288,
+            "f1": 0.3453,
+            "support": 657
+          },
+          "positive": {
+            "precision": 0.9538,
+            "recall": 0.9416,
+            "f1": 0.9477,
+            "support": 7258
+          }
+        },
+        "confusion_matrix": {
+          "labels": [
+            "negative",
+            "neutral",
+            "positive"
+          ],
+          "rows_are": "true label",
+          "columns_are": "predicted label",
+          "matrix": [
+            [
+              1482,
+              145,
+              117
+            ],
+            [
+              227,
+              216,
+              214
+            ],
+            [
+              191,
+              233,
+              6834
+            ]
+          ]
+        }
+      },
+      "latency_on_test_texts": {
+        "single_text_median_ms": 1.075,
+        "single_text_p95_ms": 1.988,
+        "batch_throughput_texts_per_s": 3726.5,
+        "n_texts": 300,
+        "method": "Single-text latency: 300 texts drawn with a fixed seed from the evaluation split are predicted one at a time (batch size 1) after 20 warm-up calls; we report the median and 95th percentile wall-clock time per call (time.perf_counter), including vectorization/tokenization. Batch throughput: the same texts are predicted in batches of 256; we report texts per second. Measured in-process on the machine listed under 'environment'; no network or disk I/O is included."
+      },
+      "training_time_seconds": 29.0
+    }
+  },
+  "created_utc": "2026-10-14T15:46:54+00:00",
+  "environment": {
+    "packages": {
+      "python": "3.12.10",
+      "numpy": "2.5.4",
+      "scikit-learn": "1.9.1",
+      "scipy": "1.18.1",
+      "joblib": "1.6.0",
+      "torch": "2.11.0+cu128",
+      "transformers": "5.19.0",
+      "tokenizers": "0.23.3",
+      "sentence-transformers": "6.1.0",
+      "mcp": "2.3.0"
+    },
+    "platform": "Windows-11-10.0.26200-SP0",
+    "processor": "Intel64 Family 6 Model 183 Stepping 1, GenuineIntel",
+    "cuda_available": true,
+    "gpu": "NVIDIA GeForce RTX 5060"
+  }
+}

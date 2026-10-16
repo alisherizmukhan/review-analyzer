@@ -1,0 +1,161 @@
+{
+  "name": "amazon_electronics",
+  "is_synthetic": false,
+  "created_utc": "2026-10-14T15:24:18+00:00",
+  "source": {
+    "path": "data/raw/amazon_electronics/reviews_sample.jsonl",
+    "format": "jsonl",
+    "sha256": "6f4a0a50e67b31baed23b321218d6b403cbbc5b7cbdbe326a57a406166c0fc55",
+    "origin": "Amazon Reviews 2023 (McAuley Lab), category Electronics; uniform reservoir sample produced by scripts/download_amazon.py (see data/raw/amazon_electronics/download_manifest.json)."
+  },
+  "config": {
+    "name": "amazon_electronics",
+    "source_path": "data/raw/amazon_electronics/reviews_sample.jsonl",
+    "columns": {
+      "text": [
+        "title",
+        "text"
+      ],
+      "product_id": "parent_asin",
+      "rating": "rating",
+      "label": null,
+      "review_id": null,
+      "group": "user_id"
+    },
+    "source_format": "jsonl",
+    "origin": "Amazon Reviews 2023 (McAuley Lab), category Electronics; uniform reservoir sample produced by scripts/download_amazon.py (see data/raw/amazon_electronics/download_manifest.json).",
+    "is_synthetic": false,
+    "label_source": "rating",
+    "text_join": ". ",
+    "drop_star_titles": true,
+    "min_text_chars": 3,
+    "deduplicate": true,
+    "product_names_path": null,
+    "output_dir": "data/processed/amazon_electronics",
+    "split": {
+      "strategy": "stratified",
+      "val_size": 0.1,
+      "test_size": 0.1,
+      "seed": 42
+    }
+  },
+  "label_mapping": {
+    "negative": [
+      1,
+      2
+    ],
+    "neutral": [
+      3
+    ],
+    "positive": [
+      4,
+      5
+    ]
+  },
+  "counts": {
+    "input_rows": 100000,
+    "missing_values_in_mapped_columns": {
+      "parent_asin": 0,
+      "user_id": 0,
+      "text": 64,
+      "rating": 0,
+      "title": 0
+    },
+    "excluded": {
+      "empty_or_too_short_text": 113,
+      "duplicate_text": 2145,
+      "conflicting_label_duplicates": 1156
+    },
+    "rows_after_cleaning": 96586
+  },
+  "split_sizes": {
+    "train": 77268,
+    "val": 9659,
+    "test": 9659
+  },
+  "class_distribution": {
+    "all": {
+      "negative": {
+        "count": 17445,
+        "percent": 18.06
+      },
+      "neutral": {
+        "count": 6569,
+        "percent": 6.8
+      },
+      "positive": {
+        "count": 72572,
+        "percent": 75.14
+      }
+    },
+    "train": {
+      "negative": {
+        "count": 13956,
+        "percent": 18.06
+      },
+      "neutral": {
+        "count": 5255,
+        "percent": 6.8
+      },
+      "positive": {
+        "count": 58057,
+        "percent": 75.14
+      }
+    },
+    "val": {
+      "negative": {
+        "count": 1745,
+        "percent": 18.07
+      },
+      "neutral": {
+        "count": 657,
+        "percent": 6.8
+      },
+      "positive": {
+        "count": 7257,
+        "percent": 75.13
+      }
+    },
+    "test": {
+      "negative": {
+        "count": 1744,
+        "percent": 18.06
+      },
+      "neutral": {
+        "count": 657,
+        "percent": 6.8
+      },
+      "positive": {
+        "count": 7258,
+        "percent": 75.14
+      }
+    }
+  },
+  "leakage_checks": {
+    "text_overlap_train_val": 0,
+    "product_overlap_train_val": 3647,
+    "text_overlap_train_test": 0,
+    "product_overlap_train_test": 3634,
+    "text_overlap_val_test": 0,
+    "product_overlap_val_test": 1298
+  },
+  "output_dir": "data/processed/amazon_electronics",
+  "environment": {
+    "packages": {
+      "python": "3.12.10",
+      "numpy": "2.5.4",
+      "scikit-learn": "1.9.1",
+      "scipy": "1.18.1",
+      "joblib": "1.6.0",
+      "torch": "2.11.0+cu128",
+      "transformers": "5.19.0",
+      "tokenizers": "0.23.3",
+      "sentence-transformers": "6.1.0",
+      "mcp": "2.3.0"
+    },
+    "platform": "Windows-11-10.0.26200-SP0",
+    "processor": "Intel64 Family 6 Model 183 Stepping 1, GenuineIntel",
+    "cuda_available": true,
+    "gpu": "NVIDIA GeForce RTX 5060"
+  }
+}
