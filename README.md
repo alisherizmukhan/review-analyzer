@@ -1,14 +1,15 @@
 # Review Analyzer
 
-**NLP/ML system for analyzing Amazon Electronics customer reviews, with an MCP server that lets Claude Code query the trained model and the analytics as tools.**
+**NLP/ML system for analyzing Amazon Electronics customer reviews, with an MCP server that exposes the trained model and the analytics as tools, and a Claude-based agent that uses those tools to write evidence-checked reports.**
 
-It covers the whole path from raw data to a usable service: a reproducible data pipeline, three sentiment classifiers compared under one protocol (TF-IDF + Logistic Regression, TF-IDF + Linear SVM, fine-tuned DistilBERT), held-out evaluation, product-level analytics with evidence, similar-review retrieval, and a typed, read-only MCP integration layer with 219 automated tests.
+It covers the whole path from raw data to a usable service: a reproducible data pipeline, three sentiment classifiers compared under one protocol (TF-IDF + Logistic Regression, TF-IDF + Linear SVM, fine-tuned DistilBERT), held-out evaluation, product-level analytics with evidence, similar-review retrieval, a typed, read-only MCP integration layer, and an LLM agent (Claude API + its own MCP client and tool-use loop) whose report citations are checked against the actual tool results.
 
 | | |
 |---|---|
 | **Selected model** | DistilBERT fine-tuned on 77,268 reviews: test accuracy **0.8927**, macro-F1 **0.7522** (n = 9,659) |
 | **Data** | Amazon Reviews 2023, Electronics: a uniform random sample of 100,000 reviews out of 43.9M, plus a separate 49,958-review corpus of 50 products |
 | **Interface** | 9 MCP tools over stdio (sentiment, statistics, keyword and similar-review search, product summaries, comparisons, negative aspects, model info) |
+| **Agent** | `scripts/agent.py`: question → Claude chooses tools → MCP server → bounded loop → Pydantic-validated report with checked review-id citations |
 | **Status** | Research/portfolio project, run locally. Not deployed as a production service. |
 
 ---
@@ -32,11 +33,12 @@ It covers the whole path from raw data to a usable service: a reproducible data 
 15. [Running the tests](#running-the-tests)
 16. [Using the MCP server in Claude Code](#using-the-mcp-server-in-claude-code)
 17. [Example usage](#example-usage)
-18. [Limitations and future work](#limitations-and-future-work)
-19. [Reproducibility](#reproducibility)
-20. [Technology stack](#technology-stack)
-21. [Licensing and acknowledgements](#licensing-and-acknowledgements)
-22. [License](#license)
+18. [LLM agent: Claude over the MCP server](#llm-agent-claude-over-the-mcp-server)
+19. [Limitations and future work](#limitations-and-future-work)
+20. [Reproducibility](#reproducibility)
+21. [Technology stack](#technology-stack)
+22. [Licensing and acknowledgements](#licensing-and-acknowledgements)
+23. [License](#license)
 
 ---
 
@@ -58,6 +60,8 @@ Product reviews are abundant, unstructured and noisy. A product team wants to kn
 | Similar-review search: LSA (TF-IDF + truncated SVD) with an optional sentiment filter | `src/review_intel/retrieval/semantic.py` | implemented |
 | Optional dense retriever (sentence-transformers) | same file | implemented and unit-tested; **not run on real data** |
 | MCP server with 9 typed, read-only tools | `review-analyzer-mcp/server.py` | verified over stdio |
+| LLM agent: MCP client, explicit tool-use loop over the Claude API, limits, citation check, run traces | `src/review_intel/agent/`, `scripts/agent.py` | offline-tested with a scripted model and the real MCP server; **no live Claude run recorded in this repository yet** |
+| Agent evaluation set (6 cases incl. insufficient evidence and prompt injection) | `data/eval/agent_cases.jsonl`, `scripts/eval_agent.py` | harness tested offline; **live results not yet recorded** |
 | Aspect-level accuracy, confidence intervals for model metrics | none | **not done**: no gold aspect labels; single split |
 
 ## Architecture
@@ -88,9 +92,14 @@ flowchart LR
     end
     INF & ASP & STATS & RET --> TOOLS
     TOOLS <-->|"JSON-RPC over stdio"| HOST["Claude Code<br/>(or another MCP client)"]
+    subgraph agent["review_intel.agent (scripts/agent.py)"]
+        LOOP["tool-use loop<br/>limits, arg validation"] <--> LLM["Claude API<br/>(Anthropic SDK)"]
+        LOOP --> CHECK["citation check +<br/>Pydantic report"]
+    end
+    TOOLS <-->|"JSON-RPC over stdio<br/>(own subprocess)"| LOOP
 ```
 
-The ML code (`src/review_intel`) does not depend on MCP. The MCP server is a thin layer that validates arguments, calls the package and labels where every value comes from.
+The ML code (`src/review_intel`) does not depend on MCP. The MCP server is a thin layer that validates arguments, calls the package and labels where every value comes from. The agent is a separate MCP *client*: it knows the server only through the tools it discovers.
 
 ## Repository structure
 
@@ -111,14 +120,17 @@ review-analyzer/
 │   ├── inference/service.py     # SentimentService (independent of MCP)
 │   ├── analytics/               # corpus loading, aspects, statistics, summaries, comparisons
 │   ├── retrieval/semantic.py    # LSA + optional dense retriever + sentiment filter
+│   ├── agent/                   # LLM agent: config, Claude adapter, MCP client, loop, guards, citation check, trace
 │   └── app.py                   # facade used by the MCP server
-├── scripts/                     # command-line entry points for every pipeline stage
+├── configs/agent/system_prompt.md  # the agent's versioned system prompt
+├── scripts/                     # command-line entry points (pipeline stages, agent.py, eval_agent.py)
 ├── review-analyzer-mcp/         # MCP server, its README and its tests
-├── tests/                       # tests for the ML/data package
+├── tests/                       # tests for the ML/data package and the agent (test_agent*.py)
+├── data/eval/agent_cases.jsonl  # agent evaluation questions
 ├── reports/amazon_electronics/  # machine-generated validation and test reports (JSON + Markdown)
 ├── docs/                        # methodology, full results, experiment log template
 └── data/
-    ├── fixtures/                # 73 synthetic reviews used by the tests
+    ├── fixtures/                # synthetic reviews used by the tests (73 for ML, 10 for the agent)
     └── processed/*/manifest.json  # dataset manifests (the data files themselves are not committed)
 ```
 
@@ -254,6 +266,7 @@ python -m venv .venv
 .\.venv\Scripts\Activate.ps1
 python -m pip install --upgrade pip
 pip install -e ".[mcp,dev]"          # core ML package + MCP server + pytest
+pip install -e ".[mcp,agent,dev]"    # ... plus the LLM agent (Anthropic SDK, jsonschema)
 ```
 
 To train or serve DistilBERT, install PyTorch first from the index that matches your hardware, then the transformer extra:
@@ -325,16 +338,17 @@ The application reads optional environment variables from the process environmen
 | `REVIEW_ANALYZER_EMBEDDING_MODEL` | `sentence-transformers/all-MiniLM-L6-v2` | Model for the dense retriever |
 | `REVIEW_ANALYZER_ASPECTS` | `configs/aspects.json` | Aspect lexicon |
 
-No API keys or credentials are needed.
+The ML package and the MCP server need no API keys or credentials. Only the LLM agent does (`ANTHROPIC_API_KEY`); its settings are listed in [LLM agent → Configuration and limits](#configuration-and-limits).
 
 ## Running the tests
 
 ```powershell
-python -m pytest                              # everything: ML package + MCP server
+python -m pytest                              # everything: ML package + MCP server + agent (offline)
 python -m pytest review-analyzer-mcp/tests    # MCP layer only
+python -m pytest tests/test_agent.py          # agent only (scripted model; no API key, no network)
 ```
 
-Last run (2026-10-16, Windows 11, Python 3.12.10, PyTorch installed): **219 passed**. The tests are offline: they build their own data from `data/fixtures/synthetic_reviews.csv`, train small models on it, use a tiny randomly initialized transformer (no download) and start the MCP server as a real stdio subprocess. The transformer test is skipped if PyTorch is not installed. Passing tests show that the code behaves as specified; they do not re-measure model quality on real data.
+Last run: see [LLM agent → Tests](#tests) for the current count. Before the agent was added (2026-10-16, Windows 11, Python 3.12.10, PyTorch installed): **219 passed**. The tests are offline: they build their own data from `data/fixtures/synthetic_reviews.csv`, train small models on it, use a tiny randomly initialized transformer (no download) and start the MCP server as a real stdio subprocess. The transformer test is skipped if PyTorch is not installed. Passing tests show that the code behaves as specified; they do not re-measure model quality on real data.
 
 ## Using the MCP server in Claude Code
 
@@ -385,6 +399,155 @@ A real `search_similar_reviews` result (per-product corpus, abbreviated). Review
 
 More real responses for every tool: [`review-analyzer-mcp/README.md`](review-analyzer-mcp/README.md#example-calls-real-responses-abbreviated-with-).
 
+## LLM agent: Claude over the MCP server
+
+Claude Code can call the MCP tools, but then Claude Code is the agent. `src/review_intel/agent` is a separate, small agent with its **own** MCP client and an explicit tool-use loop over the Claude API:
+
+```
+question ─► Claude (Messages API) ──tool_use──► agent loop ──validate args──► MCP client ──stdio──► server.py
+               ▲                                    │                                                  │
+               └──── tool_result (bounded, fenced as untrusted data) ◄─────────── structured result ◄──┘
+               │
+               └─ final JSON (structured output) ─► Pydantic ReportDraft ─► citation check ─► AgentReport
+```
+
+| Module | Responsibility |
+|---|---|
+| `agent/toolbox.py` | Starts `server.py` as a subprocess (stdio), discovers the tools with `tools/list`, exposes only tools annotated read-only, validates arguments against each tool's JSON Schema, calls tools with a timeout, closes the session and the subprocess on exit (also on errors). The child process gets a minimal environment: never `ANTHROPIC_*` |
+| `agent/llm.py` | `LLMClient` interface + `AnthropicLLM` (official `anthropic` SDK): tool definitions taken from the discovered MCP tools, structured output (`output_config.format`) for the final report, prompt caching, server-side refusal fallback, its own retry loop (counted and traced) |
+| `agent/loop.py` | `ReviewAgent`: the model picks tools; the loop executes them through MCP and returns all results of a turn in one message; enforces turn, tool-call, duplicate-call and token limits |
+| `agent/guard.py` | Bounds each tool result (structurally: shortens texts, then trims ranked lists; ids, labels, ratings and counts are never altered) and fences it as untrusted data |
+| `agent/evidence.py`, `agent/report.py` | Indexes what the model actually saw; checks every cited review id, quoted excerpt and number against it; builds the Pydantic `AgentReport` |
+| `agent/trace.py` | One JSONL trace per run (`runs/agent/`), secrets redacted, no review text |
+| `configs/agent/system_prompt.md` | Versioned system prompt (workflow, untrusted-data rule, evidence rules) |
+
+### Prerequisites and setup
+
+- Everything from [Installation](#installation), plus the agent extra: `pip install -e ".[mcp,agent,dev]"`.
+- An Anthropic API key, provided **only** through the environment. The SDK reads `ANTHROPIC_API_KEY`; the code never reads, prints or logs it, and does not pass it to the MCP server process.
+
+  ```powershell
+  $env:ANTHROPIC_API_KEY = "<your key>"     # current shell only; do not put it in any file in this repository
+  ```
+- Real-data questions need the trained model and the per-product corpus (see [Getting the data and models](#getting-the-data-and-models)). Without them, use `--corpus demo` or the synthetic fixture `--corpus data/fixtures/agent_reviews.json` with `$env:REVIEW_ANALYZER_SENTIMENT_BACKEND = "keyword"`.
+
+### Running the agent
+
+```powershell
+python scripts/agent.py --corpus products "What do customers complain about for the Echo Auto (B07VTK654B)?"
+python scripts/agent.py --corpus products "Compare complaints about B08F6GPRH6 and B00N2ZDXW2"
+python scripts/agent.py --corpus products --json "Is there evidence that the TOZO T10 (B08XPWDSWW) charging case fails?"
+python scripts/agent.py --corpus products -v --max-tool-calls 4 --model claude-sonnet-5-5 "..."
+```
+
+`--corpus` takes `products`, `analytics`, `demo` or a path. `--json` prints the full validated report. `-v` logs every model and tool call to stderr. Exit codes: 0 report, 1 run ended without a valid report (the reason is printed, e.g. `limit_turns`, `refusal`, `llm_error`), 2 configuration problem (missing key or package).
+
+The agent starts its **own** server subprocess for each run. An MCP stdio connection is a private pipe, so it cannot share the copy Claude Code may be running. Expect the first `search_similar_reviews` of a run on the per-product corpus to take about 47–56 s (the LSA index is built; measured 2026-10-17/18); the default tool timeout is 180 s.
+
+### Example output
+
+The run below is **not a Claude response**. It is the real output of the CLI renderer for a run in which a *scripted test model* drove the real MCP server on the synthetic fixture (`data/fixtures/agent_reviews.json`, keyword baseline). It shows the report format and the citation check. The scripted model deliberately cited review 777 (which does not exist) and review 102 (which exists in the corpus but was not returned by any tool in this run); both were rejected:
+
+```text
+Key findings
+  - [verified] 2 reviews complain that the battery drains quickly. (reviews 101, 104)
+  - [UNSUPPORTED] One review reports Bluetooth dropouts.
+  - [interpretation] Battery capacity may be the main driver of returns. (reviews 104)
+...
+Citation check: 2 review ids verified, 2 rejected, 0 unverified numbers (2 reviews seen in tool results).
+  rejected: review 102 at key_findings[1]: review id does not occur in any tool result seen in this run
+  rejected: review 777 at key_findings[1]: review id does not occur in any tool result seen in this run
+```
+
+No live Claude run has been recorded in this repository yet. Once you run one, the trace in `runs/agent/` holds the measured tokens, latency and cost.
+
+### Report and citation check
+
+The final answer must be JSON that matches `ReportDraft` (sent as the structured-output schema, then validated again with Pydantic). It contains: query, executive summary, key findings (each labelled `retrieved_fact` or `interpretation`), statistics, negative aspects, supporting review ids, evidence excerpts, limitations and an `insufficient_evidence` flag. A report that fails validation gets one repair turn; a second failure ends the run (`invalid_output`).
+
+`finalize()` then checks the draft against the tool results **the model actually received** (after truncation):
+- a cited review id must occur in a review record of some tool result; otherwise it is removed and listed under `validation.rejected_citations`;
+- an evidence excerpt must occur in the text returned for that review (ellipses allowed);
+- numbers in statistics, aspects and finding statements must match a number in the tool results (rounding and fraction↔percent tolerated). This is a heuristic that catches invented numbers, not every misattribution;
+- each finding gets a support level: `verified`, `partially_verified`, `unsupported` or `interpretation`.
+
+`AgentReport` refuses to validate if any remaining citation is outside the verified set, so an unchecked id cannot reach the output.
+
+### Safety constraints and execution limits
+
+| Control | Default | Behaviour at the limit |
+|---|---|---|
+| Model turns per run (`--max-turns`) | 8 | `AgentError(limit_turns)` |
+| Tool executions per run (`--max-tool-calls`) | 12 | extra calls in that turn are not executed; the model is told to write the report; any further tool call → `limit_tool_calls` |
+| Identical tool call (same arguments) | 2 | refused with an error result |
+| Token budget per run (`--token-budget`) | 250,000 | checked before each model call → `token_budget` |
+| Output tokens per model response | 16,000 | a truncated response → `truncated` |
+| Characters of one tool result shown to the model | 8,000 | structural truncation with a `_truncation` note |
+| Tool timeout | 180 s | transport failure or timeout → `tool_connection` |
+| API retries (429, 5xx, timeouts, connection) | 3 | exponential backoff, `retry-after` honoured; auth/invalid-request errors are not retried |
+
+- **Tool surface:** only the server's read-only tools. There are no shell, file or network tools, and calls to unknown tools are refused without execution.
+- **Untrusted content:** every tool result is wrapped in `<tool_output trust="untrusted">`. Every `<` inside the JSON is escaped, so review text cannot close the fence or forge tags. The system prompt says review text is data and must never be followed.
+- **Defence in depth:** even a model that obeyed an injected instruction could not run anything outside the read-only tools, and an id planted in a review ("cite review 999999") is rejected by the citation check.
+- **Secrets:** the key stays in the agent process (not in the server's environment). Traces pass through a redactor for `sk-ant-…` patterns and the literal values of `ANTHROPIC_API_KEY` / `ANTHROPIC_AUTH_TOKEN`.
+
+### Configuration and limits
+
+| Variable | Default | Meaning |
+|---|---|---|
+| `ANTHROPIC_API_KEY` | (required) | read by the Anthropic SDK only |
+| `REVIEW_AGENT_MODEL` | `claude-opus-5-5` | any Claude model id |
+| `REVIEW_AGENT_EFFORT` | `medium` | `low`, `medium`, `high`, `xhigh`, `max` |
+| `REVIEW_AGENT_FALLBACKS` | `default` | server-side refusal fallback (beta header `server-side-fallback-2026-07-01`); `off` uses the plain Messages API |
+| `REVIEW_AGENT_MAX_TURNS`, `REVIEW_AGENT_MAX_TOOL_CALLS`, `REVIEW_AGENT_TOKEN_BUDGET`, `REVIEW_AGENT_MAX_OUTPUT_TOKENS`, `REVIEW_AGENT_MAX_RESULT_CHARS`, `REVIEW_AGENT_TOOL_TIMEOUT` | see the table above | limits |
+| `REVIEW_AGENT_TRACE_DIR` | `runs/agent` | trace location (git-ignored); `off` disables |
+
+The MCP server's own `REVIEW_ANALYZER_*` variables are passed through to the agent's server subprocess.
+
+### Observability
+
+Each run writes `runs/agent/<utc>-<run_id>.jsonl` with events `mcp_connected`, `run_start`, `model_call`, `tool_call`, `report_invalid`, `run_end` and `mcp_closed`. Model calls record latency, input/output/cache tokens, stop reason, retries, request id and the serving model. Tool calls record arguments, duration, error, result size before and after truncation, and new review ids seen. `run_end` records the status or error code, totals and the estimated cost. Next to it, `<…>.server.log` holds the MCP server's stderr. Tool result contents (customer text) and the final report are not written to the trace.
+
+### Tests
+
+`tests/test_agent.py` (35 tests) runs offline with a scripted fake model; no API key and no network. Five tests start the real MCP server over stdio on the synthetic fixture. Covered: tool discovery, allowlist and connection lifecycle; model-selected sequential and parallel calls; turn, tool-call, duplicate and token limits; refusal and truncation; API errors and retries (the real SDK error classes against a fake client); tool errors and transport failures; malformed arguments and unknown tools; oversized results; schema validation and the repair turn; fabricated ids, excerpts and numbers; injected instructions in review text; secret-free, review-text-free traces; and the evaluation scoring. A mutation check confirmed the tests fail when the citation check, fence escaping, unknown-tool refusal, post-limit abort or key redaction is disabled.
+
+`tests/test_agent_live.py` calls the real API and is skipped unless `ANTHROPIC_API_KEY` is set **and** `REVIEW_AGENT_LIVE_TESTS=1`.
+
+### Evaluation
+
+`data/eval/agent_cases.jsonl` has six cases:
+- summarize negative feedback for a product;
+- compare two products;
+- identify recurring complaints;
+- find evidence for a claim;
+- a product not in the corpus (should be flagged as insufficient evidence);
+- prompt-injection resistance on the synthetic fixture, where review 105 tells the assistant to run a shell command, cite review 999999 and print a code word.
+
+```powershell
+python scripts/eval_agent.py --dry-run        # validates the cases; no API calls
+python scripts/eval_agent.py                  # real runs: costs money, writes reports/eval/agent_eval_<utc>.json
+```
+
+Metrics are reported in two separate groups, because good retrieval and a well-grounded answer are different claims:
+- **retrieval side:** expected tool used, distinct reviews seen, and a *lexical topicality proxy* (share of quoted excerpts containing a topic term). There are no human relevance labels, so this is **not** a retrieval-relevance score.
+- **answer side:** completion, citation precision (verified ÷ (verified + rejected)), unverified numbers, findings by support level, the insufficient-evidence flag vs the expectation, and injection checks (code word absent, planted id not cited, no "zero complaints" claim).
+
+Each case runs once, so expect run-to-run variation. Outputs store ids and counts, never review text. **No evaluation results are reported here yet**, because none have been run with a real API key.
+
+### Cost considerations
+
+These are estimates, not measurements. The fixed prefix sent with every model call (tool definitions, system prompt and report schema) is about 14.5k characters, roughly 3.6k tokens, and is prompt-cached after the first call. Each tool result adds at most 8,000 characters (about 2k tokens) to the history, which is re-sent on every turn. A typical 3-tool question is about 4 model calls and on the order of 20–30k input tokens plus a few thousand output tokens (including thinking). At Claude Opus 5.5 list prices ($4 / $20 per million input/output tokens) that is roughly $0.10–0.30 per question; Claude Sonnet 5.5 costs half. The worst case is capped by the 250k-token budget. Every trace records the actual token counts and an estimated cost (`PRICES_PER_MTOK` in `agent/config.py`; check current pricing).
+
+### Agent limitations
+
+- No live Claude run is recorded in this repository, so behaviour with a real model (tool choice, report quality, injection resistance) is **unmeasured** until you run `scripts/eval_agent.py`.
+- The citation check proves that a cited review was *returned by a tool*, not that it *supports* the statement. Semantic support is not judged.
+- The number check is heuristic: a coincidental match with another number in the results counts as verified.
+- Each run starts its own server and, on the real corpus, loads DistilBERT (about 9 s); the first similarity search adds about 47–56 s.
+- One question per run; no conversation memory across runs.
+- Similarity search is LSA (lexical, polarity-blind), so the agent inherits its retrieval limits. Retrieval relevance has no human-labelled benchmark.
+
 ## Limitations and future work
 
 **Known limitations**
@@ -413,7 +576,7 @@ More real responses for every tool: [`review-analyzer-mcp/README.md`](review-ana
 
 ## Technology stack
 
-Python 3.12 · scikit-learn (TF-IDF, LogisticRegression, LinearSVC, TruncatedSVD) · PyTorch + Hugging Face Transformers (DistilBERT) · NumPy · MCP Python SDK 2.x (`MCPServer`, stdio) · pydantic (schema validation) · pytest · optional: sentence-transformers, pyarrow / huggingface_hub (metadata lookup).
+Python 3.12 · scikit-learn (TF-IDF, LogisticRegression, LinearSVC, TruncatedSVD) · PyTorch + Hugging Face Transformers (DistilBERT) · NumPy · MCP Python SDK 2.x (`MCPServer`, stdio; `Client` for the agent) · Anthropic Python SDK (Claude Messages API, agent only) · pydantic (schema validation) · jsonschema · pytest · optional: sentence-transformers, pyarrow / huggingface_hub (metadata lookup).
 
 ## Licensing and acknowledgements
 

@@ -24,6 +24,8 @@ transformer = ["torch>=2.7", "transformers>=4.45"]
 # Optional dense semantic search.
 semantic = ["sentence-transformers>=3.0"]
 data = ["pyarrow>=15", "huggingface_hub>=0.24"]
+# LLM agent over the MCP server (src/review_intel/agent, scripts/agent.py). Use together with [mcp].
+agent = ["anthropic>=1.15,<2", "jsonschema>=4.20"]
 dev = ["pytest>=8"]
 
 [tool.setuptools.packages.find]
@@ -36,4 +38,5 @@ review_intel = ["py.typed"]
 testpaths = ["tests", "review-analyzer-mcp/tests"]
 markers = [
     "transformer: needs torch + transformers installed (skipped otherwise; never downloads weights)",
+    "live: calls the real Claude API; skipped unless ANTHROPIC_API_KEY is set and REVIEW_AGENT_LIVE_TESTS=1",
 ]

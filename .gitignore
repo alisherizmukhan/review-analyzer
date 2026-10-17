@@ -40,7 +40,8 @@ artifacts/
 *.pt
 *.bin
 
-# Logs and temporary output
+# Logs and temporary output (agent run traces contain queries and tool arguments)
+runs/
 *.log
 *.tmp
 tmp/
